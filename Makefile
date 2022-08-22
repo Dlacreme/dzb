@@ -1,4 +1,3 @@
-DEMO_FOLDER = ./demo
 
 .PHONY: all
 all: help
@@ -10,12 +9,10 @@ help: ## List all available commands
 		| sed -e 's/\[32m##/[33m/' \
 		| sort
 
-## Run BZT unit tests
-.PHONY: test
+.PHONY: run # Starts dzb
+run:
+	zig build run
+
+.PHONY: test ## Run dzb unit tests
 test:
 	zig build test
-
-## Execute our Demo application using the local version of BZT
-.PHONY: demo.run
-demo.run:
-	(cd $(DEMO_FOLDER) ; zig build run)
