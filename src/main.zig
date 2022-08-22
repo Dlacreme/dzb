@@ -7,7 +7,7 @@ pub fn loop() !void {
     const stdin = std.io.getStdIn().reader();
     const stdout = std.io.getStdOut().writer();
 
-    try stdout.print("udb $>", .{});
+    try stdout.print("dzb $>", .{});
     if (try stdin.readUntilDelimiterOrEof(buf[0..], '\n')) |input| {
         var c = cmd.parse_line_into_command(input) catch {
             try stdout.print("Failed to parse line:\n{s}\n\n", .{input});
