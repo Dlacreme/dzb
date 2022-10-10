@@ -3,5 +3,5 @@ const cmd = @import("./command.zig");
 
 pub fn execute(c: cmd.Command) !void {
     const stdout = std.io.getStdOut().writer();
-    try stdout.print("Run cmd {s}", .{c.raw});
+    try stdout.print("[{s}] =>\n", .{c.raw});
 }

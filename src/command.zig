@@ -7,30 +7,45 @@ const CommandError = error {
 
 pub const CommandType = enum {
     exit,
+    select,
+    insert,
+};
+
+pub const Arg = struct {
+    raw: []const u8,
 };
 
 pub const Command = struct {
+    raw: []const u8,
     type: CommandType,
-    raw: []u8,
+    args: std.ArrayList(Arg),
 };
 
-pub fn parse_line_into_command(line: []u8) !Command {
+pub fn parseLineIntoCommand(line: []u8) !Command {
     var cmd_type: ?CommandType = null;
     var splits = std.mem.split(u8, line, " ");
+    var args = std.ArrayList(Arg).init(std.heap.page_allocator);
 
     while (splits.next()) |chunk| {
         if (cmd_type == null) {
-            cmd_type = parse_command_type(chunk);
+            cmd_type = parseCommandType(chunk);
             continue;
         }
-        std.debug.print("type set so now deal with > {s}\n", .{chunk});
+        try parseArg(&args, chunk);
     }
     return Command {
         .type = cmd_type orelse return CommandError.Unknown,
         .raw = line,
+        .args = args,
     };
 }
 
-fn parse_command_type(chunk: []const u8) ?CommandType {
+fn parseCommandType(chunk: []const u8) ?CommandType {
     return std.meta.stringToEnum(CommandType, chunk);
+}
+
+fn parseArg(args: *std.ArrayList(Arg), chunk: []const u8) !void {
+    try args.append(Arg{
+        .raw = chunk,
+    });
 }
