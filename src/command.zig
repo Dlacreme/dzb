@@ -7,8 +7,6 @@ const CommandError = error {
 
 pub const CommandType = enum {
     exit,
-    select,
-    insert,
 };
 
 pub const Arg = struct {
@@ -27,8 +25,8 @@ pub fn parseLineIntoCommand(line: []u8) !Command {
     var args = std.ArrayList(Arg).init(std.heap.page_allocator);
 
     while (splits.next()) |chunk| {
-        if (cmd_type == null) {
-            cmd_type = parseCommandType(chunk);
+        if (cmd_type == null and chunk[0] == '.') {
+            cmd_type = parseCommandType(chunk[1..]);
             continue;
         }
         try parseArg(&args, chunk);
